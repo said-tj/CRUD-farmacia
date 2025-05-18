@@ -1,0 +1,41 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+
+# Entornos virtuales
+env/
+.venv/
+venv/
+*.env
+*.conda
+*.ipynb_checkpoints/
+*.egg-info/
+.env/
+
+# Archivos de entorno de Anaconda
+*.yml
+*.lock
+
+# Archivos secretos o sensibles
+.env
+secret*.json
+config/*.json
+
+# Archivos de Django que no deben subirse
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# Configuración del sistema
+.DS_Store
+Thumbs.db
+
+# VSCode, PyCharm, Jupyter, etc.
+.vscode/
+.idea/
+*.ipynb

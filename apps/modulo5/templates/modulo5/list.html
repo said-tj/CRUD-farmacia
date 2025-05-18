@@ -1,0 +1,36 @@
+{# apps/modulo5/templates/modulo5/list.html #}
+{% extends "base.html" %}
+{% block title %}Inventario Medicamentos{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Inventario de Medicamentos</h1>
+    <a href="{% url 'mod5_logout' %}" class="btn btn-outline-secondary">
+      Cerrar sesión
+    </a>
+  </div>
+
+  <p>
+    <a href="{% url 'mod5_add' %}" class="btn btn-success">Agregar Medicamento</a>
+    <a href="{% url 'mod5_reduce' %}" class="btn btn-warning">Reducir Stock</a>
+  </p>
+<table class="table">
+  <thead>
+    <tr><th>Compuesto</th><th>Categoría</th><th>Serie</th><th>Cantidad</th><th>Acciones</th></tr>
+  </thead>
+  <tbody>
+    {% for m in meds %}
+    <tr>
+      <td>{{ m.compuesto }}</td>
+      <td>{{ m.get_categoria_display }}</td>
+      <td>{{ m.numero_serie }}</td>
+      <td>{{ m.cantidad }}</td>
+      <td><a href="{% url 'mod5_delete' m.pk %}" class="btn btn-danger btn-sm">Eliminar</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">No hay medicamentos</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+"""

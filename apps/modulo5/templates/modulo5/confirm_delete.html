@@ -1,0 +1,14 @@
+# templates/modulo5/confirm_delete.html
+"""
+{% extends "base.html" %}
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<h2>¿Eliminar {{ obj.compuesto }} (Serie {{ obj.numero_serie }})?</h2>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+  <a href="{% url 'mod5_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
+"""

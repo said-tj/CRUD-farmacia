@@ -1,0 +1,24 @@
+{# apps/modulo7/templates/modulo7/login.html #}
+{% extends "base.html" %}
+{% block title %}Acceso Módulo 7{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <h2 class="mb-4">Ingresar – Módulo 7</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </div>
+      <div class="mb-3">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

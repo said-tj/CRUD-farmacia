@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Farmacia Django{% endblock %}</title>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-XXXX"
+        crossorigin="anonymous">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    {% block content %}{% endblock %}
+  </div>
+  <!-- Opcional: Bootstrap JS si lo necesitas -->
+</body>
+</html>

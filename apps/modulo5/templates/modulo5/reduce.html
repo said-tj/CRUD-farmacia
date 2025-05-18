@@ -1,0 +1,14 @@
+# templates/modulo5/reduce.html
+"""
+{% extends "base.html" %}
+{% block title %}Reducir Stock{% endblock %}
+
+{% block content %}
+<h2>Reducir Stock</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-warning">Reducir</button>
+</form>
+{% endblock %}
+"""

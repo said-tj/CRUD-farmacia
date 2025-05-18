@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Módulo 5 – Gestión de Stock{% endblock %}
+
+{% block content %}
+<div class="row">
+  <!-- Formulario de alta/actualización -->
+  <div class="col-md-5">
+    <div class="card mb-4">
+      <div class="card-header">Añadir o actualizar producto</div>
+      <div class="card-body">
+        <form method="post" action="{% url 'mod5_add' %}">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.compuesto.label_tag }}   {{ form.compuesto }}   <br>
+          {{ form.categoria.label_tag }}   {{ form.categoria }}   <br>
+          {{ form.numero_serie.label_tag }}{{ form.numero_serie }}<br>
+          {{ form.cantidad.label_tag }}    {{ form.cantidad }}    <br>
+          <button type="submit" class="btn btn-success mt-2">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de stock y acciones -->
+  <div class="col-md-7">
+    <h4>Stock actual</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Compuesto</th>
+          <th>Categoría</th>
+          <th># Serie</th>
+          <th>Cantidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.compuesto }}</td>
+          <td>{{ item.get_categoria_display }}</td>
+          <td>{{ item.numero_serie }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>
+            <form method="post" action="{% url 'mod5_reduce' item.pk %}" class="d-inline">
+              {% csrf_token %}
+              <input type="number" name="cantidad" min="1" placeholder="X" style="width:60px">
+              <button class="btn btn-warning btn-sm">Reducir</button>
+            </form>
+            <form method="post" action="{% url 'mod5_delete' item.pk %}" class="d-inline">
+              {% csrf_token %}
+              <button class="btn btn-danger btn-sm">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">No hay productos registrados.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
