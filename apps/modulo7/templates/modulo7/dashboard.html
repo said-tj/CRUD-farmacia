@@ -1,8 +1,42 @@
+# apps/modulo7/templates/modulo7/dashboard.html
+"""
 {% extends "base.html" %}
-
-{% block title %}Módulo 7{% endblock %}
+{% block title %}Control de Stock{% endblock %}
 
 {% block content %}
-  <h1>{{ titulo }}</h1>
-  <p>Bienvenido al módulo 7.</p>
+<h1>Control de Stock - Módulo 7</h1>
+<a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">Cerrar sesión</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Compuesto</th>
+      <th>Cantidad</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in meds %}
+      {% if m.cantidad < 25 %}
+        <tr class="table-danger">
+          <td>{{ m.compuesto }}</td>
+          <td>{{ m.cantidad }}</td>
+          <td><a href="#" class="btn btn-sm btn-danger">Solicitar al proveedor</a></td>
+        </tr>
+      {% elif m.cantidad < 50 %}
+        <tr class="table-warning">
+          <td>{{ m.compuesto }}</td>
+          <td>{{ m.cantidad }}</td>
+          <td><a href="#" class="btn btn-sm btn-warning">Advertencia</a></td>
+        </tr>
+      {% else %}
+        <tr class="table-success">
+          <td>{{ m.compuesto }}</td>
+          <td>{{ m.cantidad }}</td>
+          <td><a href="#" class="btn btn-sm btn-success">Cantidad óptima</a></td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
+"""
