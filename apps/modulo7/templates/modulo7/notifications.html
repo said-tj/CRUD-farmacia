@@ -1,0 +1,40 @@
+# apps/modulo7/templates/modulo7/notifications.html
+"""
+{% extends "base.html" %}
+{% block title %}Notificaciones – Módulo 7{% endblock %}
+{% block content %}
+<a href="{% url 'mod7_logout' %}">Cerrar sesión</a>
+<h1>Notificaciones de Inventario</h1>
+<table class="table">
+  <thead>
+    <tr><th>Compuesto</th><th>Cantidad</th><th>Acciones</th></tr>
+  </thead>
+  <tbody>
+  {% for m in meds %}
+    <tr>
+      <td>{{ m.compuesto }}</td>
+      <td>{{ m.cantidad }}</td>
+      <td>
+        {% if m.id in solicitados %}
+          <span class="badge bg-info">Solicitado</span>
+        {% else %}
+          {% if m.cantidad < 25 %}
+            <a href="{% url 'mod7_notifications_add' m.pk %}" 
+               class="btn btn-danger btn-sm">
+              Solicitar al proveedor
+            </a>
+          {% elif m.cantidad < 50 %}
+            <span class="badge bg-warning text-dark">Advertencia</span>
+          {% else %}
+            <span class="badge bg-success">Cantidad óptima</span>
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'mod7_basket' %}" 
+   class="btn btn-primary mt-3">Ver Canasta de Pedidos</a>
+{% endblock %}
+"""

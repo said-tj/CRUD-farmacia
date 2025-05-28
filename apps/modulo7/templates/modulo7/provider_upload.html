@@ -1,0 +1,23 @@
+# apps/modulo7/templates/modulo7/provider_upload.html
+"""
+{% extends "base.html" %}
+{% block title %}Cargar BD de Proveedor{% endblock %}
+
+{% block content %}
+  <a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">Cerrar sesión</a>
+  <h1>Cargar BD para {{ provider.nombre_legal }}</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+      {{ form.file.label_tag }}
+      {{ form.file }}
+      {% if form.file.errors %}
+        <div class="text-danger small">{{ form.file.errors.0 }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Subir Archivo</button>
+    <a href="{% url 'mod7_providers' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
+"""

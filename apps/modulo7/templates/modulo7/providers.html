@@ -1,0 +1,48 @@
+# apps/modulo7/templates/modulo7/providers.html
+"""
+{% extends "base.html" %}
+{% block title %}Catálogo de Proveedores{% endblock %}
+
+{% block content %}
+  <a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">Cerrar sesión</a>
+  <h1>Catálogo de Proveedores</h1>
+  <p>
+    <a href="{% url 'mod7_provider_create' %}" class="btn btn-primary">Crear Registro</a>
+  </p>
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>ID Interno</th>
+        <th>RFC</th>
+        <th>Nombre Legal</th>
+        <th>Contacto</th>
+        <th>Teléfono</th>
+        <th>Rating Promedio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in providers %}
+      <tr>
+        <td>{{ p.interno }}</td>
+        <td>{{ p.rfc }}</td>
+        <td>{{ p.nombre_legal }}</td>
+        <td>{{ p.contacto_nombre }}</td>
+        <td>{{ p.contacto_telefono }}</td>
+        <td>{{ p.rating_promedio }}</td>
+        <td>
+          <a href="{% url 'mod7_provider_edit' p.pk %}" class="btn btn-sm btn-secondary">Editar</a>
+          <form action="{% url 'mod7_provider_delete' p.pk %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Borrar</button>
+          </form>
+          <a href="{% url 'mod7_provider_upload' p.pk %}" class="btn btn-sm btn-info">Cargar BD</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">No hay proveedores.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+"""

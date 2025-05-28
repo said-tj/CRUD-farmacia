@@ -1,0 +1,43 @@
+# apps/modulo7/templates/modulo7/provider_form.html
+"""
+{% extends "base.html" %}
+{% block title %}{{ action }} Proveedor{% endblock %}
+
+{% block content %}
+<a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">
+  Cerrar sesión
+</a>
+
+<h1>{{ action }} Proveedor</h1>
+<form method="post" novalidate>
+  {% csrf_token %}
+
+  {# Errores globales #}
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for err in form.non_field_errors %}
+        <p>{{ err }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# Campos con errores #}
+  {% for field in form %}
+    <div class="mb-3">
+      {{ field.label_tag }}
+      {{ field }}
+      {% if field.errors %}
+        <div class="text-danger small">
+          {% for err in field.errors %}
+            <p>{{ err }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-success">{{ action }}</button>
+  <a href="{% url 'mod7_providers' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
+"""

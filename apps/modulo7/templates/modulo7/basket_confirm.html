@@ -1,0 +1,14 @@
+# apps/modulo7/templates/modulo7/basket_confirm.html
+"""
+{% extends "base.html" %}
+{% block title %}Confirmar Pedido{% endblock %}
+{% block content %}
+<a href="{% url 'mod7_logout' %}">Cerrar sesión</a>
+<h1>Confirmar Pedido</h1>
+<form method="post">{% csrf_token %}
+  {{ form.non_field_errors }}
+  {{ form.tipo }}
+  <button type="submit" class="btn btn-primary mt-2">Enviar Pedido</button>
+</form>
+{% endblock %}
+"""
