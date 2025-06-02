@@ -23,6 +23,8 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
+import io
+
 
 
 
@@ -119,17 +121,19 @@ def basket_confirm(request):
 
             # 2) Filtrar según tipo
             if tipo == 'normal':
-                # precio mínimo, luego rating_promedio
+                # 2.a) Pedido normal → buscar precio mínimo, luego rating_promedio
                 min_price = min(total for _, total in candidates)
                 best = [prov for prov, total in candidates if total == min_price]
-            else:  # urgente
-                # menor tiempo de entrega, luego rating_promedio
-                min_days = min(p.tiempo_entrega for p, _ in candidates)
-                best = [prov for prov, _ in candidates if prov.tiempo_entrega == min_days]
+            else:
+                # 2.b) Pedido urgente → ignorar precio; todos los que tengan los compuestos
+                best = [prov for prov, _ in candidates]
 
-            # 3) Desempate por rating_promedio
+            # 3) Empatar (o único) según rating_promedio
             proveedor_elegido = max(best, key=lambda p: p.rating_promedio)
+
+            # 4) Total: si es urgente, seguimos mostrando el total que genera el proveedor elegido
             total_elegido = dict(candidates)[proveedor_elegido]
+
 
             # 4) Crear Pedido con proveedor y total
             pedido = Pedido.objects.create(
@@ -227,26 +231,50 @@ def pedido_pdf(request, pk):
     p = canvas.Canvas(buffer)
     y = 800
 
+    # 1) Cabecera
     p.setFont("Helvetica-Bold", 14)
     p.drawString(50, y, f"Pedido #{pedido.id} – {pedido.get_tipo_display()}")
     y -= 30
 
+    # 2) Datos del proveedor: nombre y CLABE
     p.setFont("Helvetica", 12)
     p.drawString(50, y, f"Proveedor: {pedido.provider.nombre_legal}")
     y -= 20
+    p.drawString(50, y, f"CLABE: {pedido.provider.clabe}")
+    y -= 30
+
+    # 3) Total del pedido
     p.drawString(50, y, f"Total: ${pedido.total_price:.2f}")
     y -= 30
 
+    # 4) Detalle de compuestos y su precio
     p.drawString(50, y, "Detalle de compuestos:")
     y -= 20
+
     for item in pedido.items.all():
-        p.drawString(70, y, f"- {item.medicamento.compuesto}")
+        # Obtener precio individual según ProviderMedication
+        try:
+            pm = ProviderMedication.objects.get(
+                provider=pedido.provider,
+                compuesto=item.medicamento.compuesto
+            )
+            precio = pm.precio
+        except ProviderMedication.DoesNotExist:
+            precio = 0  # Esto no debería ocurrir si en la creación de candidates ya se validó
+
+        # Mostrar "– Compuesto: $precio"
+        p.drawString(70, y, f"- {item.medicamento.compuesto}: ${precio:.2f}")
         y -= 15
+
         if y < 50:
             p.showPage()
             y = 800
 
+    # Generar la página final y devolver el PDF
     p.showPage()
     p.save()
     buffer.seek(0)
     return HttpResponse(buffer, content_type='application/pdf')
+
+
+
