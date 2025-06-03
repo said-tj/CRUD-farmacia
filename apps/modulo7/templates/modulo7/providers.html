@@ -2,9 +2,11 @@
 """
 {% extends "base.html" %}
 {% block title %}Catálogo de Proveedores{% endblock %}
-
 {% block content %}
   <a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">Cerrar sesión</a>
+  <a href="{% url 'mod7_dashboard' %}" class="btn btn-link mb-3">
+  ← Volver al inicio
+  </a>
   <h1>Catálogo de Proveedores</h1>
   <p>
     <a href="{% url 'mod7_provider_create' %}" class="btn btn-primary">Crear Registro</a>

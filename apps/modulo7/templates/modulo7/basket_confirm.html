@@ -4,6 +4,9 @@
 {% block title %}Confirmar Pedido{% endblock %}
 {% block content %}
 <a href="{% url 'mod7_logout' %}">Cerrar sesión</a>
+<a href="{% url 'mod7_dashboard' %}" class="btn btn-link mb-3">
+  ← Volver al inicio
+</a>
 <h1>Confirmar Pedido</h1>
 <form method="post">{% csrf_token %}
   {{ form.non_field_errors }}

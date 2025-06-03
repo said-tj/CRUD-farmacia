@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from apps.modulo5.models import Medicamento
+from django.utils.translation import gettext_lazy as _
 
 
 class Provider(models.Model):
@@ -97,19 +98,19 @@ class CanastaItem(models.Model):
 
 
 
+
+
 class Pedido(models.Model):
     TIPO_CHOICES = [
         ('normal', 'Pedido Normal'),
         ('urgente', 'Pedido Urgente'),
     ]
-    # <-- nuevo: enlaza el Pedido con un Provider
-    # provider = models.ForeignKey(
-    #     Provider,
-    #     on_delete=models.CASCADE,
-    #     related_name='pedidos',
-    #     null=True,     # <–– permitir nulos
-    #     blank=True
-    # )
+
+    class Estados(models.TextChoices):
+        PENDIENTE  = 'PEN', 'Pendiente'
+        ENVIADO    = 'ENV', 'Enviado'
+        FINALIZADO = 'FIN', 'Finalizado'
+        CANCELADO  = 'CAN', 'Cancelado'
 
     provider = models.ForeignKey(
         Provider,
@@ -120,12 +121,10 @@ class Pedido(models.Model):
         help_text="Proveedor elegido según criterios"
     )
 
-
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     created_at = models.DateTimeField(default=timezone.now)
 
-
-    # <-- campo nuevo: suma total de precios de los compuestos
+    # <-- campo existente: suma total de precios de los compuestos
     total_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -134,11 +133,18 @@ class Pedido(models.Model):
         help_text="Total acumulado de los precios de todos los compuestos"
     )
 
-
-
+    # <-- aquí agregamos el nuevo campo 'estado'
+    estado = models.CharField(
+        max_length=3,
+        choices=Estados.choices,
+        default=Estados.PENDIENTE,
+        help_text="Estado actual del pedido"
+    )
 
     def __str__(self):
-        return f"{self.get_tipo_display()} – {self.provider.interno} @ {self.created_at:%Y-%m-%d %H:%M}"
+        # Ahora incluimos el estado en la representación en cadena (opcional)
+        return f"{self.get_tipo_display()} – {self.provider.interno if self.provider else 'Sin prov'} – {self.get_estado_display()} @ {self.created_at:%Y-%m-%d %H:%M}"
+
 
 
 

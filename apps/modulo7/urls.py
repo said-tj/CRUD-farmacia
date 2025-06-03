@@ -5,7 +5,12 @@ from .views import (
     add_to_canasta, remove_from_canasta, basket,
     basket_confirm, providers_catalog, provider_create,
     provider_edit, provider_delete, provider_upload,
-    mod7_logout, pedido_pdf
+    mod7_logout, pedido_pdf,
+    # ————— Nuevas vistas para seguimiento de pedidos —————
+    seguimiento_pedidos,
+    pedido_detalle,
+    pedido_cancelar,
+    pedido_aceptar,
 )
 
 urlpatterns = [
@@ -23,4 +28,11 @@ urlpatterns = [
     path('providers/edit/<int:pk>/', provider_edit, name='mod7_provider_edit'),
     path('providers/delete/<int:pk>/', provider_delete, name='mod7_provider_delete'),
     path('providers/upload/<int:pk>/', provider_upload, name='mod7_provider_upload'),
+
+    # ————— Rutas para “Seguimiento de Pedidos” —————
+    path('seguimiento/', seguimiento_pedidos, name='mod7_seguimiento_pedidos'),
+    path('pedido/<int:pk>/', pedido_detalle, name='mod7_pedido_detalle'),
+    path('pedido/<int:pk>/cancelar/', pedido_cancelar, name='mod7_pedido_cancelar'),
+    path('pedido/<int:pk>/aceptar/', pedido_aceptar, name='mod7_pedido_aceptar'),
+
 ]

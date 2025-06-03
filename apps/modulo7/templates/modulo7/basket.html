@@ -2,9 +2,11 @@
 """
 {% extends "base.html" %}
 {% block title %}Canasta de Pedidos{% endblock %}
-
 {% block content %}
 <a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">Cerrar sesión</a>
+<a href="{% url 'mod7_dashboard' %}" class="btn btn-link mb-3">
+  ← Volver al inicio
+</a>
 <h1>Canasta de Pedidos</h1>
 <table class="table">
   <thead><tr><th>Compuesto</th><th>Acciones</th></tr></thead>

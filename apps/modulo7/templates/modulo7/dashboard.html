@@ -3,7 +3,6 @@
 {% extends "base.html" %}
 {% block title %}Módulo 7 – Inicio{% endblock %}
 
-
 {% block content %}
 <a href="{% url 'mod7_logout' %}" class="btn btn-outline-secondary mb-3">
   Cerrar sesión
@@ -11,9 +10,17 @@
 
 <h1>Bienvenido al Módulo 7</h1>
 <ul class="list-group mt-4 w-50">
-  <li class="list-group-item"><a href="{% url 'mod7_notifications' %}">Notificaciones</a></li>
-  <li class="list-group-item"><a href="{% url 'mod7_providers' %}">Catálogo de proveedores</a></li>
-  <!--<li class="list-group-item"><a href="{% url 'mod7_logout' %}">Cerrar sesión</a></li>-->
+  <li class="list-group-item">
+    <a href="{% url 'mod7_notifications' %}">Notificaciones</a>
+  </li>
+  <li class="list-group-item">
+    <a href="{% url 'mod7_providers' %}">Catálogo de proveedores</a>
+  </li>
+  <!-- Nuevo ítem: Seguimiento de Pedidos -->
+  <li class="list-group-item">
+    <a href="{% url 'mod7_seguimiento_pedidos' %}">Seguimiento de Pedidos</a>
+  </li>
 </ul>
 {% endblock %}
+
 """

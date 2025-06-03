@@ -14,25 +14,11 @@ from .forms import (
     PedidoTipoForm
 )
 import csv, io
-
-
 from django.db.models import Sum
-
-
-
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
-
 import io
-
-
-
-
-
-
-
-
-
+from django.contrib import messages
 
 class Mod7LoginView(LoginView):
     template_name = 'modulo7/login.html'
@@ -70,26 +56,6 @@ def remove_from_canasta(request, pk):
 def basket(request):
     items = CanastaItem.objects.select_related('medicamento')
     return render(request, 'modulo7/basket.html', {'items': items})
-
-
-
-# @group_required('Módulo7', login_url='mod7_login')
-# def basket_confirm(request):
-#     if request.method == 'POST':
-#         form = PedidoTipoForm(request.POST)
-#         if form.is_valid():
-#             tipo = form.cleaned_data['tipo']
-#             pedido = Pedido.objects.create(tipo=tipo)
-#             for ci in CanastaItem.objects.all():
-#                 PedidoItem.objects.create(pedido=pedido, medicamento=ci.medicamento)
-#             CanastaItem.objects.all().delete()
-#             return redirect('mod7_basket')
-#     else:
-#         form = PedidoTipoForm()
-#     return render(request, 'modulo7/basket_confirm.html', {'form': form})
-
-# apps/modulo7/views.py
-
 
 
 @group_required('Módulo7', login_url='mod7_login')
@@ -154,12 +120,6 @@ def basket_confirm(request):
 
 
 
-
-
-
-
-
-
 @group_required('Módulo7', login_url='mod7_login')
 def providers_catalog(request):
     providers = Provider.objects.all()
@@ -221,9 +181,6 @@ def mod7_logout(request):
     return redirect('mod7_login')
 
 
-
-
-
 @group_required('Módulo7', login_url='mod7_login')
 def pedido_pdf(request, pk):
     pedido = get_object_or_404(Pedido, pk=pk)
@@ -278,3 +235,64 @@ def pedido_pdf(request, pk):
 
 
 
+
+
+
+
+
+@group_required('Módulo7', login_url='mod7_login')
+def seguimiento_pedidos(request):
+    """
+    Muestra todos los pedidos en una tabla, con columnas:
+    ID, Fecha, Tipo, Proveedor, Total, Estado y botones para
+    Ver, Cancelar y Aceptar.
+    """
+    pedidos = Pedido.objects.order_by('-created_at')
+    return render(request, 'modulo7/seguimiento_pedidos.html', {
+        'pedidos': pedidos
+    })
+
+
+@group_required('Módulo7', login_url='mod7_login')
+def pedido_detalle(request, pk):
+    """
+    Muestra el detalle completo de un pedido (incluyendo estado y compuestos).
+    """
+    pedido = get_object_or_404(Pedido, pk=pk)
+    return render(request, 'modulo7/pedido_detalle.html', {
+        'pedido': pedido
+    })
+
+
+@group_required('Módulo7', login_url='mod7_login')
+def pedido_cancelar(request, pk):
+    """
+    Cambia el estado del pedido a CANCELADO. Solo puede hacerlo
+    si el pedido está PENDIENTE o ENVIADO; de lo contrario se muestra error.
+    Luego redirige nuevamente al seguimiento.
+    """
+    pedido = get_object_or_404(Pedido, pk=pk)
+    if pedido.estado in (Pedido.Estados.PENDIENTE, Pedido.Estados.ENVIADO):
+        pedido.estado = Pedido.Estados.CANCELADO
+        pedido.save()
+        messages.success(request, f"Pedido #{pedido.id} ha sido cancelado.")
+    else:
+        messages.error(request, f"El pedido #{pedido.id} no puede cancelarse (estado: {pedido.get_estado_display()}).")
+    return redirect('mod7_seguimiento_pedidos')
+
+
+@group_required('Módulo7', login_url='mod7_login')
+def pedido_aceptar(request, pk):
+    """
+    Cambia el estado del pedido a FINALIZADO. Solo puede hacerlo
+    si el pedido está PENDIENTE o ENVIADO; de lo contrario se muestra error.
+    Luego redirige al seguimiento.
+    """
+    pedido = get_object_or_404(Pedido, pk=pk)
+    if pedido.estado in (Pedido.Estados.PENDIENTE, Pedido.Estados.ENVIADO):
+        pedido.estado = Pedido.Estados.FINALIZADO
+        pedido.save()
+        messages.success(request, f"Pedido #{pedido.id} ha sido marcado como Finalizado.")
+    else:
+        messages.error(request, f"El pedido #{pedido.id} no puede finalizarse (estado: {pedido.get_estado_display()}).")
+    return redirect('mod7_seguimiento_pedidos')
